@@ -1,1 +1,1 @@
-# lesson---10-database
+# homework-sql

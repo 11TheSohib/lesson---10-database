@@ -43,7 +43,11 @@ const addUser = (req, res) => {
 
 const getUser = (req, res) => {
   try {
-    const { minAge, maxAge } = req.query;
+    let { minAge, maxAge } = req.query;
+
+	minAge = minAge ? minAge : 0
+	maxAge = maxAge ? maxAge : 1000;
+
 
     db.query(
       `SELECT * FROM users WHERE age >= ${minAge} AND age <= ${maxAge}`,
@@ -95,4 +99,25 @@ const updateUser = (req, res) => {
   }
 };
 
-export { addUser, getUser, updateUser };
+const deleteUser = (req, res) => {
+  try {
+    const id = req.params.id;
+
+    db.query(`DELETE FROM users WHERE id = ?`, [id], (error, result) => {
+      if (error) {
+        return res
+          .status(500)
+          .send({ message: "Server xatosi!", errorMassege: error.message });
+      }
+
+      res
+        .status(200)
+        .send({ message: "Foydalanuvchi muvaffaqiyatli o'chirildi!" });
+    });
+  } catch (error) {
+    return res.status(500).send({ error: error.message });
+  }
+};
+
+
+export { addUser, getUser, updateUser, deleteUser };
